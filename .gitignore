@@ -1,0 +1,52 @@
+## .NET & Visual Studio ##
+bin/
+obj/
+out/
+.vs/
+.vscode/
+.idea/
+*.user
+*.userosv
+*.suo
+*.userprefs
+*.sln.docstates
+
+## Build Results ##
+[D|d]ebug/
+[R|r]elease/
+x64/
+x86/
+build/
+dist/
+
+## User-specific files ##
+*.rsuser
+*.suo
+*.user
+*.userosv
+*.userprefs
+
+## Node / React (Frontend) ##
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+## Environment & Secrets ##
+appsettings.Secrets.json
+*.pem
+*.key
+
+## OS Generated Files ##
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Docker & Containers ##
+.docker/
+docker-compose.override.yml
