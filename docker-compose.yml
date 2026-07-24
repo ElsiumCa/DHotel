@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dhotel-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: dhotel-mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=P@ssw0rd123!
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:latest
+    container_name: dhotel-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: dhotel-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+  seq:
+    image: datalust/seq:latest
+    container_name: dhotel-seq
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=true
+    volumes:
+      - seq_data:/data
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: dhotel-jaeger
+    ports:
+      - "16686:16686"
+      - "14317:4317"
+      - "14318:4318"
+    networks:
+      - dhotel-network
+    restart: unless-stopped
+
+networks:
+  dhotel-network:
+    driver: bridge
+
+volumes:
+  rabbitmq_data:
+  mariadb_data:
+  mongodb_data:
+  redis_data:
+  seq_data:
