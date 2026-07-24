@@ -9,3 +9,4 @@ D:\Coding\DisturSystems\DHotel\src\BuildingBlocks\EventBus.Messages\obj\Debug\ne
 D:\Coding\DisturSystems\DHotel\src\BuildingBlocks\EventBus.Messages\obj\Debug\net9.0\refint\EventBus.Messeges.dll
 D:\Coding\DisturSystems\DHotel\src\BuildingBlocks\EventBus.Messages\obj\Debug\net9.0\EventBus.Messeges.pdb
 D:\Coding\DisturSystems\DHotel\src\BuildingBlocks\EventBus.Messages\obj\Debug\net9.0\ref\EventBus.Messeges.dll
+D:\Coding\DisturSystems\DHotel\src\BuildingBlocks\EventBus.Messages\obj\Debug\net9.0\EventBus.Messeges.sourcelink.json
