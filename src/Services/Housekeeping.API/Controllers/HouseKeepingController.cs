@@ -88,27 +88,37 @@ public class HousekeepingController : ControllerBase
         return Ok(new { message = "Temizlik tamamlandı bildirimi gönderildi.", task });
     }
 
-    // 4. Arıza/Hasar Bildir
-    [HttpPost("tasks/{id}/report-damage")]
-    public async Task<IActionResult> ReportDamage(string id, [FromBody] string description)
+    // 4. Arıza/Hasar Bildir (Görev ID veya Oda Numarası İle)
+    [HttpPost("report-damage")]
+    public async Task<IActionResult> ReportDamage([FromBody] DamageReportRequest request)
     {
-        var task = await _taskCollection.Find(t => t.Id == id).FirstOrDefaultAsync();
-        if (task == null)
-        {
-            return NotFound("Temizlik görevi bulunamadı.");
-        }
+        var task = await _taskCollection.Find(t => t.RoomNumber == request.RoomNumber || t.Id == request.TaskId).FirstOrDefaultAsync();
 
-        // RabbitMQ'ya DamageReportedEvent fırlat (Saga odanın durumunu 'InMaintenance' yapacak)
+        var correlationId = task?.CorrelationId ?? (request.CorrelationId != Guid.Empty ? request.CorrelationId : Guid.NewGuid());
+        var roomId = task?.RoomId ?? Guid.NewGuid();
+
+        // RabbitMQ'ya DamageReportedEvent fırlat (Saga odanın durumunu 'InMaintenance' yapacak ve Maintenance kuyruğuna komut atacak)
         await _publishEndpoint.Publish(new DamageReportedEvent
         {
-            CorrelationId = task.CorrelationId,
-            RoomId = task.RoomId,
-            RoomNumber = task.RoomNumber,
-            Description = description,
-            ReportedBy = task.AssignedTo ?? "Housekeeper"
+            CorrelationId = correlationId,
+            RoomId = roomId,
+            RoomNumber = request.RoomNumber,
+            Description = request.Description,
+            ReportedBy = request.ReportedBy ?? "Housekeeper"
         });
 
-        _logger.LogWarning("Oda arızası bildirildi. RoomNumber: {RoomNumber}, Açıklama: {Description}", task.RoomNumber, description);
-        return Ok(new { message = "Arıza bildirimi gönderildi." });
+        _logger.LogWarning("Oda arızası RabbitMQ'ya gönderildi. RoomNumber: {RoomNumber}, Açıklama: {Description}", 
+            request.RoomNumber, request.Description);
+
+        return Ok(new { message = "Arıza bildirimi RabbitMQ'ya iletildi.", correlationId });
     }
+}
+
+public class DamageReportRequest
+{
+    public string? TaskId { get; set; }
+    public string RoomNumber { get; set; } = string.Empty;
+    public Guid CorrelationId { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string? ReportedBy { get; set; }
 }

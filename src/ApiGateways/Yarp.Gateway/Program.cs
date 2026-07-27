@@ -6,8 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => {
     options.AddPolicy("CorsPolicy", policy => {
-        policy.WithOrigins("http://localhost:3000",
-                           "http://localhost:5173")
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -41,6 +40,5 @@ var app = builder.Build();
 app.UseCors("CorsPolicy");
 app.MapHub<RoomHub>("/hubs/room");
 app.MapReverseProxy();
-
 
 app.Run();

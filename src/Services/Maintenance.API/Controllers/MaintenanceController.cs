@@ -39,7 +39,7 @@ namespace Maintenance.API.Controllers
             ticket.ResolvedAt = DateTime.UtcNow;
             ticket.AssignedTechnician = technicianName;
 
-           await _publishendpoint.Publish(new MaintenanceTicket
+           await _publishendpoint.Publish(new EventBus.Messages.Events.MaintenanceResolvedEvent
             {
                 CorrelationId = ticket.CorrelationId,
                 RoomId = ticket.RoomId,

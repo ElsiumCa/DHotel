@@ -8,7 +8,8 @@ namespace Yarp.Gateway.Consumers;
 public class RoomEventsConsumer : 
     IConsumer<RoomReadyEvent>,
     IConsumer<CleaningStartedEvent>,
-    IConsumer<DamageReportedEvent>
+    IConsumer<DamageReportedEvent>,
+    IConsumer<GuestCheckedInEvent>
 {
     private readonly IHubContext<RoomHub> _hubContext;
     private readonly ILogger<RoomEventsConsumer> _logger;
@@ -17,6 +18,18 @@ public class RoomEventsConsumer :
     {
         _hubContext = hubContext;
         _logger = logger;
+    }
+
+    public async Task Consume(ConsumeContext<GuestCheckedInEvent> context)
+    {
+        _logger.LogInformation("SignalR: {RoomNumber} numaralı odaya {Guest} GİRİŞ YAPTI!", context.Message.RoomNumber, context.Message.GuestName);
+        await _hubContext.Clients.All.SendAsync("ReceiveRoomStatus", new
+        {
+            eventType = "GuestCheckedIn",
+            roomNumber = context.Message.RoomNumber,
+            guestName = context.Message.GuestName,
+            correlationId = context.Message.CorrelationId
+        });
     }
 
     public async Task Consume(ConsumeContext<RoomReadyEvent> context)

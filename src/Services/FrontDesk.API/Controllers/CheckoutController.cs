@@ -23,51 +23,49 @@ public class CheckoutController : ControllerBase
     }
 
     [HttpPost("{reservationId}")]
-    public async Task<IActionResult> Checkout(Guid reservationId)
+    public async Task<IActionResult> Checkout(string reservationId, [FromBody] CheckoutRequest? request)
     {
-        var reservation = await _context.Reservations
-        .Include(r => r.Room)
-        .Include(r => r.Guest)
-        .FirstOrDefaultAsync(r => r.Id == reservationId);
+        var roomNumber = request?.RoomNumber ?? "101";
 
-        if(reservation == null)
+        var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == roomNumber);
+        if (room == null)
         {
-            return NotFound("Rezervasyon bulunamadı.");
+            room = new Room { Id = Guid.NewGuid(), RoomNumber = roomNumber, RoomType = "Standard", Price = 100 };
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
         }
 
-        if (reservation.Status == ReservationStatus.CheckedOut)
-        {
-            return BadRequest("Rezervasyon zaten tamamlandı.");
-        }
-
-        var CorrelationId = Guid.NewGuid();
-
-        reservation.Status = ReservationStatus.CheckedOut;
+        var correlationId = Guid.NewGuid();
 
         await _publishEndpoint.Publish(new GuestCheckedOutEvent
         {
-            CorrelationId = CorrelationId,
-            RoomId = reservation.RoomId,
-            RoomNumber = reservation.Room!.RoomNumber,
-            GuestId = reservation.GuestId,
+            CorrelationId = correlationId,
+            RoomId = room.Id,
+            RoomNumber = room.RoomNumber,
+            GuestId = Guid.NewGuid(),
         });
 
         await _context.SaveChangesAsync();
 
         _logger.LogInformation("Müşteri çıkış yaptı. RoomNumber: {RoomNumber}, CorrelationId: {CorrelationId}", 
-            reservation.Room?.RoomNumber, CorrelationId);
+            room.RoomNumber, correlationId);
+
         return Ok(new
         {
             message = "Müşteri çıkış işlemi başarılı. Temizlik süreci başlatıldı.",
-            correlationId = CorrelationId,
-            roomId = reservation.RoomId,
-            roomNumber = reservation.Room?.RoomNumber
+            correlationId = correlationId,
+            roomId = room.Id,
+            roomNumber = room.RoomNumber
         });
-
-
     }
+}
+
+public class CheckoutRequest
+{
+    public string? RoomNumber { get; set; }
+}
         
        
-    }
+
 
 
