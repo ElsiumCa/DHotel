@@ -1,10 +1,10 @@
 ## .NET & Visual Studio ##
-bin/
-obj/
-out/
-.vs/
-.vscode/
-.idea/
+**/bin/
+**/obj/
+**/out/
+**/.vs/
+**/.vscode/
+**/.idea/
 *.user
 *.userosv
 *.suo
