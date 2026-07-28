@@ -1,6 +1,6 @@
 # DHotel - Dağıtık Otel Oda Yaşam Döngüsü
 
-Bu repoda asenkron mesaj kuyrukları, event-driven mimari ve Saga desenini (State Machine) hedef alan dağıtık bir otel oda yaşam döngüsü sistemini kurgulamaya ve uygulamaya çalışıyorum.
+Bu repoda asenkron mesaj kuyrukları, event-driven mimari ve Saga desenini (State Machine) hedef alan dağıtık bir otel oda yaşam döngüsü sistemini kurgulamaya ve uygulamaya çalışıyorum. Bu proje temelde over-engineering örneğidir. Fakat farklı sistemlerin iletişimini simüle etmek için uygun bir örnek olarak görülmüştür.
 
 - [DHotel - Dağıtık Otel Oda Yaşam Döngüsü](#dhotel---dağıtık-otel-oda-yaşam-döngüsü)
   - [Geliştirme Ortamı](#geliştirme-ortamı)
