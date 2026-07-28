@@ -3,7 +3,6 @@
 Bu repoda asenkron mesaj kuyrukları, event-driven mimari ve Saga desenini (State Machine) hedef alan dağıtık bir otel oda yaşam döngüsü sistemini kurgulamaya ve uygulamaya çalışıyorum. Bu proje temelde over-engineering örneğidir. Fakat farklı sistemlerin iletişimini simüle etmek için uygun bir örnek olarak görülmüştür.
 
 - [DHotel - Dağıtık Otel Oda Yaşam Döngüsü](#dhotel---dağıtık-otel-oda-yaşam-döngüsü)
-  - [Geliştirme Ortamı](#geliştirme-ortamı)
   - [Senaryo](#senaryo)
   - [Aday Çözüm](#aday-çözüm)
   - [Envanter](#envanter)
@@ -12,23 +11,6 @@ Bu repoda asenkron mesaj kuyrukları, event-driven mimari ve Saga desenini (Stat
   - [Sistemin Çalıştırılması](#sistemin-çalıştırılması)
   - [Docker Unsurları](#docker-unsurları)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
-
----
-
-## Geliştirme Ortamı
-
-Geliştirme süreci boyunca aşağıdaki sistem bileşenleri kullanılmıştır.
-
-| Özellik   | Açıklama                      |
-|-----------|-------------------------------|
-| OS        | Windows 11 Enterprise / Ubuntu 22.04 LTS |
-| CPU       | Intel® Core™ i7 / i9           |
-| RAM       | 32 GB                         |
-| IDE       | VS Code / Visual Studio 2022  |
-| Framework | .NET 9.0                      |
-| Messaging | MassTransit 8.3.6 & RabbitMQ  |
-| Gateway   | YARP (Yet Another Reverse Proxy)|
-| Real-time | ASP.NET Core SignalR WebSockets|
 
 ---
 
